@@ -1,8 +1,8 @@
 <?php
-/**
- * Точка входа. Пока заготовка — на следующем шаге подключим сервер и вывод.
- */
 require_once __DIR__ . '/../src/functions.php';
+
+$day = date('d.m.Y');
+$version = '1.0.0';
 ?>
 <!doctype html>
 <html lang="ru">
@@ -14,7 +14,8 @@ require_once __DIR__ . '/../src/functions.php';
 <body>
   <main>
     <h1>Заявки сотрудников</h1>
-    <p>Каркас проекта готов. Следующий шаг — запуск PHP-сервера.</p>
+    <p> Версия приложения: <?= $version?></p>
+    <p> Сегодня: <?= $day?></p>
   </main>
 </body>
 </html>
