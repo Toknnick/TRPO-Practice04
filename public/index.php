@@ -6,7 +6,9 @@ $version = '1.0.0';
 $departments = ['Разработка', 'Аналитика', 'Тестирование', 'Поддержка'];
 
 $csvPath = dirname(__FILE__) . '/../data/employees.csv';
-$employees = loadEmployees($csvPath);
+$employeesFromFile = loadEmployees($csvPath);
+$filterDepartment = trim($_GET['department'] ?? '');
+$employees = filterEmployeesByDepartment($employeesFromFile, $filterDepartment);
 $employeesCount = count($employees);
 
 $showEmails = true;
@@ -50,6 +52,18 @@ if ($isSubmitted) {
     <p>Показывать email: <?= $showEmails ? 'да' : 'нет' ?></p>
     <p>Отделы: <?=e(implode(', ', $departments)) ?></p>
 
+    <form method="get" action="">
+      <label>Фильтр по отделу
+        <select name="department">
+          <option value="">Все</option>
+          <?php foreach ($departments as $dep): ?>
+            <option value="<?= e($dep) ?>"<?= $filterDepartment === $dep ? ' selected' : '' ?>><?= e($dep) ?></option>
+          <?php endforeach; ?>
+        </select>
+      </label>
+      <button type="submit">Показать</button>
+    </form>
+
     <h2>Сотрудники</h2>
     <table class="employees">
       <thead>
@@ -92,7 +106,6 @@ if ($isSubmitted) {
     <?php endforeach; ?>
   </ul>
 <?php endif; ?>
-
 <form method="post" action="">
   <p>
     <label>ФИО
@@ -104,7 +117,7 @@ if ($isSubmitted) {
       <select name="department">
         <option value="">— выберите —</option>
         <?php foreach ($departments as $dep): ?>
-          <option value="<?= e($dep) ?>"><?= e($dep) ?></option>
+          <option value="<?= e($dep) ?>"<?= $department === $dep ? ' selected' : '' ?>><?= e($dep) ?></option>
         <?php endforeach; ?>
       </select>
     </label>

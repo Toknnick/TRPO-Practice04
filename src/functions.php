@@ -70,3 +70,18 @@ function validateApplication(array $data, array $departments): array
 
     return $errors;
 }
+
+function filterEmployeesByDepartment(array $employees, string $department): array
+{
+    if ($department === '') {
+        return $employees;
+    }
+
+    $filtered = [];
+    foreach ($employees as $employee) {
+        if ($employee['department'] === $department) {
+            $filtered[] = $employee;
+        }
+    }
+    return $filtered;
+}
