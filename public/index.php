@@ -10,6 +10,28 @@ $employees = loadEmployees($csvPath);
 $employeesCount = count($employees);
 
 $showEmails = true;
+
+$name = trim($_POST['name'] ?? '');
+$department = trim($_POST['department'] ?? '');
+$experience = trim($_POST['experience'] ?? '');
+$email = trim($_POST['email'] ?? '');
+
+$isSubmitted = $_SERVER['REQUEST_METHOD'] === 'POST';
+$errors = [];
+$success = false;
+if ($isSubmitted) {
+    $errors = validateApplication(
+        [
+            'name' => $name,
+            'department' => $department,
+            'experience' => $experience,
+            'email' => $email,
+        ],
+        $departments
+    );
+    $success = $errors === [];
+}
+
 ?>
 <!doctype html>
 <html lang="ru">
@@ -58,5 +80,48 @@ $showEmails = true;
       </tbody>
     </table>
   </main>
+
+<h2>Новая заявка</h2>
+<?php if ($success): ?>
+  <p>Заявка принята: <?= e($name) ?>, <?= e($department) ?>, опыт <?= e($experience) ?>, <?= e($email) ?></p>
+<?php endif; ?>
+<?php if ($errors !== []): ?>
+  <ul>
+    <?php foreach ($errors as $message): ?>
+      <li><?= e($message) ?></li>
+    <?php endforeach; ?>
+  </ul>
+<?php endif; ?>
+
+<form method="post" action="">
+  <p>
+    <label>ФИО
+      <input type="text" name="name" value="<?= e($name) ?>">
+    </label>
+  </p>
+  <p>
+    <label>Отдел
+      <select name="department">
+        <option value="">— выберите —</option>
+        <?php foreach ($departments as $dep): ?>
+          <option value="<?= e($dep) ?>"><?= e($dep) ?></option>
+        <?php endforeach; ?>
+      </select>
+    </label>
+  </p>
+  <p>
+    <label>Опыт (лет)
+      <input type="number" name="experience" value="<?= e($experience) ?>">
+    </label>
+  </p>
+  <p>
+    <label>Email
+      <input type="email" name="email" value="<?= e($email) ?>">
+    </label>
+  </p>
+  <p>
+    <button type="submit">Отправить</button>
+  </p>
+</form>
 </body>
 </html>
